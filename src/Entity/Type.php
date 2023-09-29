@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GenderRepository;
+use App\Repository\TypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: GenderRepository::class)]
-class Gender
+#[ORM\Entity(repositoryClass: TypeRepository::class)]
+class Type
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,12 +18,12 @@ class Gender
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'gender', targetEntity: Candidate::class)]
-    private Collection $candidates;
+    #[ORM\OneToMany(mappedBy: 'jobType', targetEntity: Offer::class)]
+    private Collection $offers;
 
     public function __construct()
     {
-        $this->candidates = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,29 +44,29 @@ class Gender
     }
 
     /**
-     * @return Collection<int, Candidate>
+     * @return Collection<int, Offer>
      */
-    public function getCandidates(): Collection
+    public function getOffers(): Collection
     {
-        return $this->candidates;
+        return $this->offers;
     }
 
-    public function addCandidate(Candidate $candidate): static
+    public function addOffer(Offer $offer): static
     {
-        if (!$this->candidates->contains($candidate)) {
-            $this->candidates->add($candidate);
-            $candidate->setGender($this);
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setJobType($this);
         }
 
         return $this;
     }
 
-    public function removeCandidate(Candidate $candidate): static
+    public function removeOffer(Offer $offer): static
     {
-        if ($this->candidates->removeElement($candidate)) {
+        if ($this->offers->removeElement($offer)) {
             // set the owning side to null (unless already changed)
-            if ($candidate->getGender() === $this) {
-                $candidate->setGender(null);
+            if ($offer->getJobType() === $this) {
+                $offer->setJobType(null);
             }
         }
 

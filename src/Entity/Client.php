@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -13,26 +15,34 @@ class Client
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $companyName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeOfActivity = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactPosition = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactNumber = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactEmail = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $notes = null;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Offer::class)]
+    private Collection $offers;
+
+    public function __construct()
+    {
+        $this->offers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,7 +54,7 @@ class Client
         return $this->companyName;
     }
 
-    public function setCompanyName(string $companyName): static
+    public function setCompanyName(?string $companyName): static
     {
         $this->companyName = $companyName;
 
@@ -56,7 +66,7 @@ class Client
         return $this->typeOfActivity;
     }
 
-    public function setTypeOfActivity(string $typeOfActivity): static
+    public function setTypeOfActivity(?string $typeOfActivity): static
     {
         $this->typeOfActivity = $typeOfActivity;
 
@@ -68,7 +78,7 @@ class Client
         return $this->contactName;
     }
 
-    public function setContactName(string $contactName): static
+    public function setContactName(?string $contactName): static
     {
         $this->contactName = $contactName;
 
@@ -80,7 +90,7 @@ class Client
         return $this->contactPosition;
     }
 
-    public function setContactPosition(string $contactPosition): static
+    public function setContactPosition(?string $contactPosition): static
     {
         $this->contactPosition = $contactPosition;
 
@@ -92,7 +102,7 @@ class Client
         return $this->contactNumber;
     }
 
-    public function setContactNumber(string $contactNumber): static
+    public function setContactNumber(?string $contactNumber): static
     {
         $this->contactNumber = $contactNumber;
 
@@ -104,7 +114,7 @@ class Client
         return $this->contactEmail;
     }
 
-    public function setContactEmail(string $contactEmail): static
+    public function setContactEmail(?string $contactEmail): static
     {
         $this->contactEmail = $contactEmail;
 
@@ -119,6 +129,36 @@ class Client
     public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): static
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): static
+    {
+        if ($this->offers->removeElement($offer)) {
+            // set the owning side to null (unless already changed)
+            if ($offer->getClient() === $this) {
+                $offer->setClient(null);
+            }
+        }
 
         return $this;
     }

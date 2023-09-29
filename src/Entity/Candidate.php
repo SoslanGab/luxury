@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CandidateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,74 +16,83 @@ class Candidate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adress = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nationality = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $isPassportValid = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $passportFile = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $curruculumVitae = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cv = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilPicture = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $currentLocation = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $birtAt = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $birthAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $placeOfBirth = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $isAvailable = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $category = null;
-
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $shortDescription = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'candidates')]
-    private ?Experience $experience = null;
-
-    #[ORM\ManyToOne(inversedBy: 'candidates')]
-    private ?Gender $gender = null;
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'candidate', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'candidate')]
-    private ?Application $application = null;
+    #[ORM\ManyToOne(inversedBy: 'candidates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Gender $gender = null;
+
+    #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Application::class)]
+    private Collection $applications;
+
+    #[ORM\ManyToOne(inversedBy: 'candidates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'candidates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Experience $experience = null;
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,7 +104,7 @@ class Candidate
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(?string $firstName): static
     {
         $this->firstName = $firstName;
 
@@ -105,7 +116,7 @@ class Candidate
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(?string $lastName): static
     {
         $this->lastName = $lastName;
 
@@ -117,7 +128,7 @@ class Candidate
         return $this->adress;
     }
 
-    public function setAdress(string $adress): static
+    public function setAdress(?string $adress): static
     {
         $this->adress = $adress;
 
@@ -129,7 +140,7 @@ class Candidate
         return $this->country;
     }
 
-    public function setCountry(string $country): static
+    public function setCountry(?string $country): static
     {
         $this->country = $country;
 
@@ -141,7 +152,7 @@ class Candidate
         return $this->nationality;
     }
 
-    public function setNationality(string $nationality): static
+    public function setNationality(?string $nationality): static
     {
         $this->nationality = $nationality;
 
@@ -153,7 +164,7 @@ class Candidate
         return $this->isPassportValid;
     }
 
-    public function setIsPassportValid(bool $isPassportValid): static
+    public function setIsPassportValid(?bool $isPassportValid): static
     {
         $this->isPassportValid = $isPassportValid;
 
@@ -165,21 +176,21 @@ class Candidate
         return $this->passportFile;
     }
 
-    public function setPassportFile(string $passportFile): static
+    public function setPassportFile(?string $passportFile): static
     {
         $this->passportFile = $passportFile;
 
         return $this;
     }
 
-    public function getCurruculumVitae(): ?string
+    public function getCv(): ?string
     {
-        return $this->curruculumVitae;
+        return $this->cv;
     }
 
-    public function setCurruculumVitae(string $curruculumVitae): static
+    public function setCv(?string $cv): static
     {
-        $this->curruculumVitae = $curruculumVitae;
+        $this->cv = $cv;
 
         return $this;
     }
@@ -189,7 +200,7 @@ class Candidate
         return $this->profilPicture;
     }
 
-    public function setProfilPicture(string $profilPicture): static
+    public function setProfilPicture(?string $profilPicture): static
     {
         $this->profilPicture = $profilPicture;
 
@@ -201,21 +212,21 @@ class Candidate
         return $this->currentLocation;
     }
 
-    public function setCurrentLocation(string $currentLocation): static
+    public function setCurrentLocation(?string $currentLocation): static
     {
         $this->currentLocation = $currentLocation;
 
         return $this;
     }
 
-    public function getBirtAt(): ?\DateTimeImmutable
+    public function getBirthAt(): ?\DateTimeImmutable
     {
-        return $this->birtAt;
+        return $this->birthAt;
     }
 
-    public function setBirtAt(\DateTimeImmutable $birtAt): static
+    public function setBirthAt(?\DateTimeImmutable $birthAt): static
     {
-        $this->birtAt = $birtAt;
+        $this->birthAt = $birthAt;
 
         return $this;
     }
@@ -225,7 +236,7 @@ class Candidate
         return $this->placeOfBirth;
     }
 
-    public function setPlaceOfBirth(string $placeOfBirth): static
+    public function setPlaceOfBirth(?string $placeOfBirth): static
     {
         $this->placeOfBirth = $placeOfBirth;
 
@@ -237,21 +248,9 @@ class Candidate
         return $this->isAvailable;
     }
 
-    public function setIsAvailable(bool $isAvailable): static
+    public function setIsAvailable(?bool $isAvailable): static
     {
         $this->isAvailable = $isAvailable;
-
-        return $this;
-    }
-
-    public function getCategory(): ?string
-    {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): static
-    {
-        $this->category = $category;
 
         return $this;
     }
@@ -261,7 +260,7 @@ class Candidate
         return $this->shortDescription;
     }
 
-    public function setShortDescription(string $shortDescription): static
+    public function setShortDescription(?string $shortDescription): static
     {
         $this->shortDescription = $shortDescription;
 
@@ -273,7 +272,7 @@ class Candidate
         return $this->notes;
     }
 
-    public function setNotes(string $notes): static
+    public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
 
@@ -285,7 +284,7 @@ class Candidate
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -297,7 +296,7 @@ class Candidate
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -309,21 +308,21 @@ class Candidate
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(\DateTimeImmutable $deletedAt): static
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    public function getExperience(): ?Experience
+    public function getUser(): ?User
     {
-        return $this->experience;
+        return $this->user;
     }
 
-    public function setExperience(?Experience $experience): static
+    public function setUser(User $user): static
     {
-        $this->experience = $experience;
+        $this->user = $user;
 
         return $this;
     }
@@ -340,26 +339,56 @@ class Candidate
         return $this;
     }
 
-    public function getUser(): ?User
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
     {
-        return $this->user;
+        return $this->applications;
     }
 
-    public function setUser(?User $user): static
+    public function addApplication(Application $application): static
     {
-        $this->user = $user;
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setCandidate($this);
+        }
 
         return $this;
     }
 
-    public function getApplication(): ?Application
+    public function removeApplication(Application $application): static
     {
-        return $this->application;
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getCandidate() === $this) {
+                $application->setCandidate(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setApplication(?Application $application): static
+    public function getCategory(): ?Category
     {
-        $this->application = $application;
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getExperience(): ?Experience
+    {
+        return $this->experience;
+    }
+
+    public function setExperience(?Experience $experience): static
+    {
+        $this->experience = $experience;
 
         return $this;
     }

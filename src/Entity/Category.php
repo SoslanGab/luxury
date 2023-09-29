@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ExperienceRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ExperienceRepository::class)]
-class Experience
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,12 +18,16 @@ class Experience
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'experience', targetEntity: Candidate::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Candidate::class)]
     private Collection $candidates;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Offer::class)]
+    private Collection $offers;
 
     public function __construct()
     {
         $this->candidates = new ArrayCollection();
+        $this->offers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,7 +59,7 @@ class Experience
     {
         if (!$this->candidates->contains($candidate)) {
             $this->candidates->add($candidate);
-            $candidate->setExperience($this);
+            $candidate->setCategory($this);
         }
 
         return $this;
@@ -65,8 +69,38 @@ class Experience
     {
         if ($this->candidates->removeElement($candidate)) {
             // set the owning side to null (unless already changed)
-            if ($candidate->getExperience() === $this) {
-                $candidate->setExperience(null);
+            if ($candidate->getCategory() === $this) {
+                $candidate->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): static
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): static
+    {
+        if ($this->offers->removeElement($offer)) {
+            // set the owning side to null (unless already changed)
+            if ($offer->getCategory() === $this) {
+                $offer->setCategory(null);
             }
         }
 
