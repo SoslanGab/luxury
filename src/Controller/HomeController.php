@@ -53,7 +53,7 @@ class HomeController extends AbstractController
     #[Route('/register', name: 'register')]
     public function register(): Response
     {
-        return $this->render('auth/register.html.twig', [
+        return $this->render('registration/register.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
