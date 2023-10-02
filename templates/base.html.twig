@@ -134,6 +134,15 @@
                         </li>
                     </ul>
                 {% endif %}
+                {% if app.user %}
+                    <ul class="menuzord-menu pull-right light" role="navigation">
+                        <li class=" dropdown">
+                            <a style="color:red;" target="_self" href="logout">
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
                     <ul class="menuzord-menu pull-right light" role="navigation">
                         <li class="active dropdown">
                             <a target="_self" href="{{ path('app_home')}}">
@@ -203,7 +212,7 @@
         <div class="container">
             <ul class="" role="navigation">
                 <li class="active dropdown">
-                    <a target="_self" href="{{ path('app.home')}}">
+                    <a target="_self" href="{{path('app_home')}}">
                         <span>Home</span>
                     </a>
                 </li>
