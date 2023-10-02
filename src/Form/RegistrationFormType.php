@@ -43,6 +43,31 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+
+            ->add('passwordConfirmation', PasswordType::class, [
+                'label' => 'Confirm Password',
+                'attr' => ['autocomplete' => 'new-password'],
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please confirm your password',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your password confirmation should be at least {{ limit }} characters',
+                        'max' => 4096,
+                    ]),
+                ],
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'label' => 'I have read and I accept the Terms Of Use',
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'You should agree to our terms.',
+                    ]),
+                ],
+            ]);
         ;
     }
 

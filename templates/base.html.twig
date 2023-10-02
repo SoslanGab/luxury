@@ -91,7 +91,7 @@
 
             <div id="materialize-menu" class="menuzord">
 
-                <a class="brand logo-brand" href="index"></a>
+                <a class="brand logo-brand" href="{{ path('app_home')}}"></a>
                 <div id="mobile-menu">
                     <div class="nav-wrapper" id="toggle">
                         <span class="top"></span>
@@ -108,7 +108,7 @@
                     <div class="nav-overlay" id="overlay">
                         <nav class="overlay-menu">
                             <ul>
-                                <li><a href="index">Home</a></li>
+                                <li><a href="/index">Home</a></li>
                                 <li><a href="jobs">Jobs Offers</a></li>
                                 <li><a href="about">About Us</a></li>
                                 <li><a href="contact">Contact</a></li>
@@ -120,6 +120,7 @@
                     </div>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                {% if not app.user %}
                     <ul class="menuzord-menu pull-right light" role="navigation">
                         <li class=" dropdown">
                             <a target="_self" href="login">
@@ -130,30 +131,30 @@
                             <a target="_self" href="register" class="btn bn-lg gradient secondary btn-block waves-effect waves-light btn-register">
                                 <span>Sign Up</span>
                             </a>
-
                         </li>
                     </ul>
+                {% endif %}
                     <ul class="menuzord-menu pull-right light" role="navigation">
                         <li class="active dropdown">
-                            <a target="_self" href="index">
+                            <a target="_self" href="{{ path('app_home')}}">
                                 <i class=""></i>
                                 <span>Home</span>
                             </a>
                         </li>
                         <li class=" dropdown">
-                            <a target="_self" href="jobs">
+                            <a target="_self" href="{{ path('jobs')}}">
                                 <i class=""></i>
                                 <span>Jobs offers</span>
                             </a>
                         </li>
                         <li class=" dropdown">
-                            <a target="_self" href="company">
+                            <a target="_self" href="{{ path('company')}}">
                                 <i class=""></i>
                                 <span>About us</span>
                             </a>
                         </li>
                         <li class=" dropdown">
-                            <a target="_self" href="contact">
+                            <a target="_self" href="{{ path('contact')}}">
                                 <i class=""></i>
                                 <span>Contact</span>
                             </a>
@@ -202,22 +203,22 @@
         <div class="container">
             <ul class="" role="navigation">
                 <li class="active dropdown">
-                    <a target="_self" href="index">
+                    <a target="_self" href="{{ path('app.home')}}">
                         <span>Home</span>
                     </a>
                 </li>
                 <li class=" dropdown">
-                    <a target="_self" href="jobs">
+                    <a target="_self" href="{{ path('jobs')}}">
                         <span>Jobs offers</span>
                     </a>
                 </li>
                 <li class=" dropdown">
-                    <a target="_self" href="compagny">
+                    <a target="_self" href="{{ path('company')}}">
                         <span>About us</span>
                     </a>
                 </li>
                 <li class=" dropdown">
-                    <a target="_self" href="contact">
+                    <a target="_self" href="{{ path('contact')}}">
                         <span>Contact</span>
                     </a>
                 </li>
