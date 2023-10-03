@@ -3,29 +3,6 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
-{% endblock %}
-
 <div class="base">
     <!-- Page -->
     <div class="page">
@@ -62,12 +39,17 @@
                                     <label for="email">Email</label>
                                     <span class="help-block">Type your email address.</span>
                                 </div>
+                                    {% if error %}
+                                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                    {% endif %}
+
+                                    {% if app.user %}
+                                        <div class="mb-3">
+                                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                        </div>
+                                    {% endif %}
                                 <div class="input-field">
-                                    <input type="password" name="password" id="inputPassword"
-                                            required
-                                            autocomplete="current-password"
-                                            data-parsley-trigger="change"
-                                            data-parsley-error-message="The password must be at least 6 characters.">
+                                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
                                     <label for="password">Password</label>
                                     <i class="fa fa-eye show-password"></i>
                                     <span class="help-block">Type your password.</span>
@@ -101,3 +83,5 @@
         </section>
     </div>
 </div>
+
+{% endblock %}
