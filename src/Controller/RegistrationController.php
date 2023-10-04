@@ -29,18 +29,17 @@ class RegistrationController extends AbstractController
                 $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
+                ),
+
             );
+
+            $candidate = new Candidate();
+            $candidate->setUser($user);
 
             $entityManager->persist($user);
-            $entityManager->flush();
-            // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+           $entityManager->persist($candidate);
+            $entityManager->flush();
         }
 
         return $this->render('registration/register.html.twig', [
