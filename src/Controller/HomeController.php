@@ -29,18 +29,4 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
-    #[Route('/jobs', name: 'jobs')]
-    public function jobs(): Response
-    {
-        return $this->render('jobs/jobs.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
-    #[Route('/show', name: 'show')]
-    public function show(): Response
-    {
-        return $this->render('jobs/show.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
 }
