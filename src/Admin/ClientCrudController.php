@@ -2,21 +2,14 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Application;
+use App\Entity\Client;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Symfony\Bundle\SecurityBundle\Security;
 
-class ApplicationCrudController extends AbstractCrudController
+class ClientCrudController extends AbstractCrudController
 {
-    public function __construct(
-        private Security $security
-    ) {
-    }
-
     public static function getEntityFqcn(): string
     {
-
-        return Application::class;
+        return Client::class;
     }
 
     /*

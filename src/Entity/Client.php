@@ -16,7 +16,7 @@ class Client
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $companyName = null;
+    private ?string $compagnyName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeOfActivity = null;
@@ -33,10 +33,7 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactEmail = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $notes = null;
-
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Offer::class)]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Offer::class, orphanRemoval: true)]
     private Collection $offers;
 
     public function __construct()
@@ -49,14 +46,14 @@ class Client
         return $this->id;
     }
 
-    public function getCompanyName(): ?string
+    public function getCompagnyName(): ?string
     {
-        return $this->companyName;
+        return $this->compagnyName;
     }
 
-    public function setCompanyName(?string $companyName): static
+    public function setCompagnyName(?string $compagnyName): static
     {
-        $this->companyName = $companyName;
+        $this->compagnyName = $compagnyName;
 
         return $this;
     }
@@ -121,18 +118,6 @@ class Client
         return $this;
     }
 
-    public function getNotes(): ?string
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(?string $notes): static
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Offer>
      */
@@ -161,5 +146,10 @@ class Client
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->compagnyName;
     }
 }
