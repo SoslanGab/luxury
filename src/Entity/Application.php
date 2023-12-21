@@ -13,22 +13,35 @@ class Application
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $submittedAt = null;
+    #[ORM\Column]
+    private ?bool $status = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $status = null;
+    private ?\DateTimeImmutable $submittedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Candidate $candidate = null;
 
     #[ORM\ManyToOne(inversedBy: 'applications')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
     public function getSubmittedAt(): ?\DateTimeImmutable
@@ -39,18 +52,6 @@ class Application
     public function setSubmittedAt(?\DateTimeImmutable $submittedAt): static
     {
         $this->submittedAt = $submittedAt;
-
-        return $this;
-    }
-
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?bool $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

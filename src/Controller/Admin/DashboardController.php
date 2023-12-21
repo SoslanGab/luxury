@@ -2,10 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Candidate;
-use App\Entity\Category;
-use App\Entity\Offer;
-use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -15,31 +11,47 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {
+    }
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        return $this->redirect($adminUrlGenerator->setController(CandidateCrudController::class)->generateUrl());
+        if ($this->isGranted('ROLE_ADMIN')) {
 
-      
+            $url = $this->adminUrlGenerator
+                ->setController(ClientCrudController::class)
+                ->generateUrl();
+
+            return $this->redirect($url);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Luxury');
+            ->setTitle('Luxury Service');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Categorie', 'fas fa-user', Category::class);
-        yield MenuItem::linkToCrud('Candidate', 'fas fa-user', Candidate::class);
-        yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
-        yield MenuItem::linkToCrud('Offer', 'fas fa-user', Offer::class);
-        
-
-
+        if ($this->isGranted('ROLE_ADMIN')) {
+            yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+            yield MenuItem::linkToCrud('Client', 'fas fa-list', ClientCrudController::getEntityFqcn());
+            yield MenuItem::subMenu('Actions')->setSubItems([
+                MenuItem::linkToCrud('add client', 'fas fa-plus', ClientCrudController::getEntityFqcn())->setAction('new'),
+            ]);
+            yield MenuItem::linkToCrud('Offer', 'fas fa-list', OfferCrudController::getEntityFqcn());
+            yield MenuItem::subMenu('Actions')->setSubItems([
+                MenuItem::linkToCrud('add offer', 'fas fa-plus', OfferCrudController::getEntityFqcn())->setAction('new'),
+            ]);
+            yield MenuItem::linkToCrud('Application', 'fas fa-list', ApplicationCrudController::getEntityFqcn());
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
     }
 }

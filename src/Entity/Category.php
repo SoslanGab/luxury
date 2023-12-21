@@ -15,18 +15,14 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Candidate::class)]
-    private Collection $candidates;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Offer::class)]
     private Collection $offers;
 
     public function __construct()
     {
-        $this->candidates = new ArrayCollection();
         $this->offers = new ArrayCollection();
     }
 
@@ -40,39 +36,9 @@ class Category
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Candidate>
-     */
-    public function getCandidates(): Collection
-    {
-        return $this->candidates;
-    }
-
-    public function addCandidate(Candidate $candidate): static
-    {
-        if (!$this->candidates->contains($candidate)) {
-            $this->candidates->add($candidate);
-            $candidate->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCandidate(Candidate $candidate): static
-    {
-        if ($this->candidates->removeElement($candidate)) {
-            // set the owning side to null (unless already changed)
-            if ($candidate->getCategory() === $this) {
-                $candidate->setCategory(null);
-            }
-        }
 
         return $this;
     }
@@ -105,5 +71,10 @@ class Category
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

@@ -1,49 +1,150 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Offer index{% endblock %}
 
 {% block body %}
-    <h1>Offer index</h1>
+     <div class="base">
+      <!-- Page -->
+      <div class="page">
+        <!-- Page Header-->
+        <section
+          class="page-title page-title-bg fixed-bg overlay dark-5 padding-top-160 padding-bottom-80">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="white-text">Our job offers</h2>
+                <span class="white-text"
+                  >Search and filter by job category</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>IsActive</th>
-                <th>JobTitle</th>
-                <th>JobLocation</th>
-                <th>ClosingAt</th>
-                <th>Salary</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for offer in offers %}
-            <tr>
-                <td>{{ offer.id }}</td>
-                <td>{{ offer.reference }}</td>
-                <td>{{ offer.description }}</td>
-                <td>{{ offer.isActive ? 'Yes' : 'No' }}</td>
-                <td>{{ offer.jobTitle }}</td>
-                <td>{{ offer.jobLocation }}</td>
-                <td>{{ offer.closingAt ? offer.closingAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ offer.salary }}</td>
-                <td>{{ offer.createdAt ? offer.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_offer_show', {'id': offer.id}) }}">show</a>
-                    <a href="{{ path('app_offer_edit', {'id': offer.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Page Content-->
+        <section id="job-offers" class="section-padding gray-bg">
+          <div class="container">
+            <div class="text-center mb-40">
+              <h2 class="section-title">We have the perfect job for you</h2>
+              <p class="section-sub">
+                just like our candidates, we offer quality, serious & reliable
+                job offers.
+              </p>
+            </div>
+            <div class="portfolio-container">
+              <ul class="portfolio-filter brand-filter text-center">
+                <li class="active waves-effect waves-light" data-group="all">
+                  All
+                </li>
+                <li class="waves-effect waves-light" data-group="Commercial">
+                  Commercial
+                </li>
+                <li class="waves-effect waves-light" data-group="Retail sales">
+                  Retail sales
+                </li>
+                <li class="waves-effect waves-light" data-group="Creative">
+                  Creative
+                </li>
+                <li class="waves-effect waves-light" data-group="Technology">
+                  Technology
+                </li>
+                <li class="waves-effect waves-light" data-group="Marketing & PR">
+                  Marketing & PR
+                </li>
+                <li class="waves-effect waves-light" data-group="Fashion & luxury">
+                  Fashion & luxury
+                </li>
+                <li class="waves-effect waves-light" data-group="Management & HR">
+                  Management & HR
+                </li>
+              </ul>
+              <div class="portfolio portfolio-with-title col-2 gutter mt-30">
 
-    <a href="{{ path('app_offer_new') }}">Create new</a>
+                {% for offer in offers %}
+
+                <div class="portfolio-item" data-groups='["all", "{{offer.category.name}}"]'>
+                  <div class="portfolio-wrapper">
+                    <div class="card job-card">
+                      <div class="card-content">
+                        <span class="title">
+                          <span class="card-title">{{offer.jobTitle}}</span>
+                          <span class="ref grey-text"> {{offer.reference}} </span>
+                        </span>
+                        <div class="metas mb-20">
+                          <div class="meta">
+                            <i class="material-icons">&#xE53E;</i> {{offer.salary}} &euro;
+                          </div>
+                          <div class="meta">
+                            <i class="material-icons">&#xE916;</i> {{offer.closingAt|date('d/m/Y')}}
+                          </div>
+                          <div class="meta">
+                            <i class="material-icons">&#xE55F;</i>{{offer.jobLocation}}
+                          </div>
+                        </div>
+                        <p class="truncate-text">
+                         {{offer.description}}
+                        </p>
+                      </div>
+                      <div class="card-action">
+                        <a
+                          class="btn btn-md primary border waves-effect waves-dark"
+                          href="{{path('app_offer_show', {'id': offer.id})}}}}"
+                          >Details</a
+                        >
+                        <a
+                          class="btn btn-md primary waves-effect waves-light"
+                          href="#!"
+                          >Apply</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                
+                <div class="no-item"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="cta-candidate bg-fixed bg-cover overlay dark-5 padding-top-70 padding-bottom-50">
+          <div class="container">
+            <div class="row">
+              <div class="valign-wrapper text-center">
+                <div class="hero-intro valign-cell">
+                  <h2 class="tt-headline clip is-full-width no-margin">
+                    <span>You are </span>
+                    <span class="tt-words-wrapper">
+                      <b class="is-visible">Commercial</b>
+                      <b>Creative</b>
+                      <b>Marketing & PR</b>
+                      <b>Technology</b>
+                      <b>Fashion & luxury</b>
+                      <b>Retail sales</b>
+                    </span>
+                  </h2>
+                  <h3 class="c-secondary mb-30 no-margin">
+                    Sign-up and apply for jobs now
+                  </h3>
+                  <p class="white-text section-sub">
+                    Each one of your skills is seen as precious resource to us,
+                    each one of your personality traits are considered as an
+                    added on value. Joining us is allowing our recruitment
+                    expertise and personal guidance to bring the best out in you
+                    by choosing the most suited position.
+                  </p>
+
+                  <a
+                    href="/register.html"
+                    class="btn border secondary waves-effect waves-light mt-40"
+                    >Join us</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
 {% endblock %}

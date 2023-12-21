@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\OfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
@@ -19,10 +18,14 @@ class Offer
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reference = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?bool $isActive = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -30,6 +33,10 @@ class Offer
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $jobLocation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $closingAt = null;
@@ -40,20 +47,11 @@ class Offer
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Application::class)]
-    private Collection $applications;
-
-    #[ORM\ManyToOne(inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Client $client = null;
-
-    #[ORM\ManyToOne(inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne]
     private ?Type $jobType = null;
 
-    #[ORM\ManyToOne(inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
+    #[ORM\OneToMany(mappedBy: 'Offer', targetEntity: Application::class, orphanRemoval: true)]
+    private Collection $applications;
 
     public function __construct()
     {
@@ -77,6 +75,18 @@ class Offer
         return $this;
     }
 
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -94,7 +104,7 @@ class Offer
         return $this->isActive;
     }
 
-    public function setIsActive(?bool $isActive): static
+    public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
 
@@ -121,6 +131,18 @@ class Offer
     public function setJobLocation(?string $jobLocation): static
     {
         $this->jobLocation = $jobLocation;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
@@ -161,6 +183,18 @@ class Offer
         return $this;
     }
 
+    public function getJobType(): ?Type
+    {
+        return $this->jobType;
+    }
+
+    public function setJobType(?Type $jobType): static
+    {
+        $this->jobType = $jobType;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Application>
      */
@@ -187,42 +221,6 @@ class Offer
                 $application->setOffer(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): static
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    public function getJobType(): ?Type
-    {
-        return $this->jobType;
-    }
-
-    public function setJobType(?Type $jobType): static
-    {
-        $this->jobType = $jobType;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
 
         return $this;
     }

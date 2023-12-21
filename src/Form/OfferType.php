@@ -21,8 +21,8 @@ class OfferType extends AbstractType
             ->add('salary')
             ->add('createdAt')
             ->add('client')
-            ->add('jobType')
             ->add('category')
+            ->add('jobType')
         ;
     }
 
